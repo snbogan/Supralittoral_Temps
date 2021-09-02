@@ -1,0 +1,46 @@
+﻿Date,Site,Logger,Coordinates,Submerged,Download,Tigriopus_californicus,Filter_Post_Date,Notes
+3/17/20,RMR,RMR1,"35°32'24.4""N 121°05'32.8""W",Yes,Yes,Yes,No,NA
+3/17/20,RMR,RMR2,"35°32'21.0""N 121°05'29.3""W",Yes,Yes,Yes,No,NA
+3/17/20,RMR,RMR3,"35°32'20.9""N 121°05'29.1""W",Yes,Yes,Yes,No,NA
+3/18/20,SC,SC1,"36°57'55.5""N 122°07'33.5""W",Yes,Yes,Yes,No,NA
+3/18/20,SC,SC2,"36°57'55.4""N 122°07'33.5""W",Yes,Yes,Yes,No,NA
+3/18/20,SC,SC3,"36°57'55.4""N 122°07'33.5""W",Yes,Yes,Yes,No,NA
+3/19/20,BMR,BMR1,"38°18'58.9""N 123°04'18.9""W",Yes,Yes,Yes,No,NA
+3/19/20,BMR,BMR2,"38°18'59.1""N 123°04'18.9""W",Yes,Yes,Yes,No,NA
+3/19/20,BMR,BMR3,"38°18'58.9""N 123°04'18.7""W",Yes,Yes,Yes,No,NA
+8/24/20,PTD,PTD1,"34°00'03.2""N 118°48'18.7""W",Yes,Yes,Yes,No,NA
+8/24/20,PTD,PTD2,"34°00'07.7""N 118°48'17.9""W",Yes,Yes,Yes,No,NA
+8/24/20,PTD,PTD3,"34°00'07.7""N 118°48'18.0""W",Yes,Yes,Yes,No,NA
+9/19/20,PTD,PTD1,"34°00'03.2""N 118°48'18.7""W",Yes,Yes,Yes,No,NA
+9/19/20,PTD,PTD2,"34°00'07.7""N 118°48'17.9""W",Yes,Yes,Yes,No,NA
+9/19/20,PTD,PTD3,"34°00'07.7""N 118°48'18.0""W",Yes,Yes,Yes,No,NA
+11/16/20,RMR,RMR1,"35°32'24.4""N 121°05'32.8""W",Yes,Yes,Yes,No,NA
+11/16/20,RMR,RMR2,"35°32'21.0""N 121°05'29.3""W",Yes,Yes,Yes,No,NA
+11/16/20,RMR,RMR3,"35°32'20.9""N 121°05'29.1""W",Yes,Yes,Yes,No,NA
+12/2/20,BMR,BMR1,"38°18'58.9""N 123°04'18.9""W",Yes,No,Yes,No,NA
+12/2/20,BMR,BMR2,"38°18'59.1""N 123°04'18.9""W",Yes,No,Yes,No,NA
+12/2/20,BMR,BMR3,"38°18'58.9""N 123°04'18.7""W",Yes,No,Yes,No,NA
+2/20/21,RMR,RMR1,"35°32'24.4""N 121°05'32.8""W",No,Yes,Yes,No,Logger repositioned in same pool
+2/20/21,RMR,RMR2,"35°32'21.0""N 121°05'29.3""W",Yes,Yes,Yes,No,NA
+2/20/21,RMR,RMR3,"35°32'20.9""N 121°05'29.1""W",Yes,Yes,Yes,No,NA
+4/1/21,BMR,BMR1,"38°18'58.9""N 123°04'18.9""W",Yes,Yes,Yes,No,NA
+4/1/21,BMR,BMR2,"38°18'59.1""N 123°04'18.9""W",No,Yes,Yes,No,NA
+4/1/21,BMR,BMR3,"38°18'58.9""N 123°04'18.7""W",Yes,Yes,Yes,No,NA
+4/2/21,BMR,BMR1,"38°18'58.9""N 123°04'18.9""W",Yes,No,Yes,No,NA
+4/2/21,BMR,BMR2,"38°18'59.1""N 123°04'18.9""W",Yes,No,Yes,Yes,NA
+4/2/21,BMR,BMR3,"38°18'58.9""N 123°04'18.7""W",Yes,No,Yes,No,NA
+4/5/21,SC,SC1,"36°57'55.5""N 122°07'33.5""W",Yes,No,Yes,No,NA
+4/5/21,SC,SC2,"36°57'55.4""N 122°07'33.5""W",Yes,No,Yes,No,NA
+4/5/21,SC,SC3,"36°57'55.4""N 122°07'33.5""W",Yes,No,Yes,No,NA
+6/13/21,PTD,PTD1,"34°00'03.2""N 118°48'18.7""W",Yes,No,Yes,No,"Logger broken; logger removed; new logger deployed in new pool at 34°00'07.8""N 118°48'17.9""W"
+6/13/21,PTD,PTD2,"34°00'07.7""N 118°48'17.9""W",Yes,Yes,Yes,No,NA
+6/13/21,PTD,PTD3,"34°00'07.7""N 118°48'18.0""W",Yes,Yes,Yes,No,Logger readable but broke on 02/02/2021; logger removed; new logger deployed in same pool
+6/14/21,RMR,RMR1,"35°32'24.4""N 121°05'32.8""W",Yes,Yes,Yes,No,NA
+6/14/21,RMR,RMR2,"35°32'21.0""N 121°05'29.3""W",Yes,Yes,Yes,No,NA
+6/14/21,RMR,RMR3,"35°32'20.9""N 121°05'29.1""W",Yes,Yes,Yes,No,NA
+6/15/21,BMR,BMR1,"38°18'58.9""N 123°04'18.9""W",Yes,Yes,Yes,No,NA
+6/15/21,BMR,BMR2,"38°18'59.1""N 123°04'18.9""W",No,Yes,No,No,"Pool completely evaporated rendering data between 04/02/2021 - 06/15/2021 unusable; logger removed; same logger redeployed in new pool at 38°18'59.1""N 123°04'19.1""W"
+6/15/21,BMR,BMR3,"38°18'58.9""N 123°04'18.7""W",Yes,Yes,Yes,No,NA
+6/16/21,SC,SC1,"36°57'55.5""N 122°07'33.5""W",Yes,Yes,Yes,No,NA
+6/16/21,SC,SC2,"36°57'55.4""N 122°07'33.5""W",Yes,Yes,Yes,No,NA
+6/16/21,SC,SC3,"36°57'55.4""N 122°07'33.5""W",Yes,No,Yes,No,Logger broken; logger removed; new logger deployed in same pool

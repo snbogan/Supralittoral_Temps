@@ -1,0 +1,209 @@
+---
+title: "Temp_Time_Series"
+author: "Sam Bogan"
+date: "6/23/2021"
+output: github_document
+---
+
+This is an R Markdown written by Sam Bogan that reads in, wrangles, summarizes, and analyzes time series temperatures collected from n = 3 per site supralittoral splash pools occupied by *Tigriopus californicus* across 4 sites in coastal California (see README). Data were recorded by TidBit MX5000 temperature loggers made by Onset Computer Corp between 2019 - 2021. 
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+#Identify measurements to filter out
+
+```{r}
+
+# Load packages
+library( tidyverse )
+library( Rmisc )
+library( lubridate )
+library( data.table )
+library( tibbletime )
+
+# Read csv describing periods where loggers broke or were aerially exposed
+TidBit_meta_df <- read.csv( "~/Documents/GitHub/HotOnes_Tigriopus/Temp_Time_Series/Input_files/TidBit_Deployment_Check_History.csv" )
+
+# Print metadata sheet
+TidBit_meta_df
+
+## Filter out periods where logger may have been aerially exposed due to evaporation of pool
+# Start by outputing rows in metadata signifying post-date filtering
+filt_post_dates <- filter( TidBit_meta_df, Filter_Post_Date == "Yes" )
+
+# Print dates
+filt_post_dates
+
+# Create variables for filtering
+logger_to_filter <- as.character( filt_post_dates$Logger )
+date_to_filter_past <- as.Date( filt_post_dates$Date, "%m/%d/%y" )
+
+```
+
+#Read and wrangle raw data
+
+```{r}
+
+# Move to input data directory for tempm time series
+setwd( "~/Documents/GitHub/HotOnes_Tigriopus/Temp_Time_Series/Input_files/" )
+
+# Get the files names
+temps <- list.files( pattern = "*0.csv" )
+
+# Read in .csv files listed in temps
+mytemps <- lapply( temps, read.csv )
+
+# Correct df names from mytemps
+names( mytemps ) <- gsub( " .*",
+                          "",
+                          temps )
+
+# Remove unecessary columns and standardize column number
+mytemps <- lapply( mytemps, function ( y ) { y <- select( y, c( 1, 2 ) ) } )
+
+# Filter out contiously aerially-exposed measurements in BRM2
+mytemps$BMR2 <- dplyr::filter( mytemps$BMR2, as.Date( Date.Time..GMT..0800, "%m/%d/%y" ) < as.Date( date_to_filter_past ) )
+
+# Data from PTD3 must be filtered following 02/02/2021 due to damage and miscalibration
+mytemps$PTD3 <- dplyr::filter( mytemps$PTD3, as.Date(  mytemps$PTD3$Date.Time..GMT..0700, "%m/%d/%y" ) < as.Date( "2021-02-02 00:00:00" ) )
+
+# Combine all temp dfs
+all_temps <- rbindlist( mytemps, 
+                        idcol = "Logger" )
+
+# Remove rows where temp is empty
+all_temps <- all_temps[ !(is.na( all_temps$Temp....F. ) | 
+                            all_temps$Temp....F.  == "" ), ]
+
+# Create site variable
+all_temps$Site <- gsub( "[1-9]+", 
+                        "", 
+                        all_temps$Logger )
+
+# Fix column names
+names( all_temps )[ names( all_temps ) == "Date.Time..GMT..0800"] <- "Date_Time"
+names( all_temps )[ names( all_temps ) == "Temp....F."] <- "Temp"
+
+# Convert temp to celcius
+all_temps$Temp <- round( ( ( all_temps$Temp - 32 ) * ( 5 / 9 ) ),
+                         digits = 2 )
+
+# Create date variable
+all_temps$Date <- as.Date( all_temps$Date_Time, "%m/%d/%y" )
+
+# Ensure that Date_Time variable is in date-time format
+all_temps$Date_Time <- mdy_hm( all_temps$Date_Time )
+
+# Create month variable
+all_temps$Month <- month( all_temps$Date )
+
+# Create latitude index
+lat_index <- data.frame( Site = c( "BMR", "SC", "RMR", "PTD" ),
+                         Lat = c( 38.316375,
+                                  36.965681,
+                                  35.540147,
+                                  34.002089 ) )
+# Merge lat index with temp df
+all_temps <- merge( all_temps,
+       lat_index,
+       by = "Site" )
+
+```
+
+#Plot filtered temperatures
+
+```{r}
+
+# Plot all temp data as check on filtering and wrangling
+ggplot( data = all_temps, 
+        aes( x = Date_Time, y = Temp ) ) +
+  geom_line( alpha = 0.5, size = 0.5, stat = "identity" ) +
+  theme_classic() +
+  facet_wrap( ~Logger )
+
+# Plot all temps by site
+ggplot( data = all_temps, 
+        aes( x = Date_Time, y = Temp, group = Site ) ) +
+  geom_point( alpha = 0.025, size = 0.05 ) +
+  theme_gray() +
+  facet_grid( Site ~ . )
+
+# Filter to common earliest and latest dates for all loggers before plott means: one day after PTD deployment
+all_temps_filt <- filter( all_temps, 
+                          Date > as.Date( "2020-03-01" ),
+                          Date < as.Date( "2021-06-12" ) )
+
+all_temps_filt_1yr <- filter( all_temps, 
+                          Date > as.Date( "2020-06-12" ),
+                          Date < as.Date( "2021-06-12" ) )
+
+# Estimate daily means
+mean_temps <- summarySE( measurevar = "Temp",
+                         groupvars = c( "Site", "Date", "Lat", "Month" ),
+                         data = all_temps_filt )
+
+# Convert mean date to datetime variable
+names( mean_temps )[ names( mean_temps ) == "Date"] <- "Date_Time"
+mean_temps$Date_Time <- as_datetime( mean_temps$Date_Time )
+
+# Estimate overall annual mean
+overall_mean_temp <- summarySE( measurevar = "Temp",
+                         groupvars = c( "Site", "Date" ),
+                         data = all_temps_filt_1yr )
+
+overall_mean_temp <- summarySE( measurevar = "Temp",
+                         groupvars = NULL,
+                         data = overall_mean_temp )
+
+#Print overall mean temp
+overall_mean_temp
+
+# Estimate site means
+site_temps <- summarySE( measurevar = "Temp",
+                         groupvars = c( "Site", "Lat" ),
+                         data = all_temps_filt )
+
+# Estimate site means by month
+site_month_temps <- summarySE( measurevar = "Temp",
+                         groupvars = c( "Site", "Lat", "Month" ),
+                         data = all_temps_filt )
+
+# Plot daily means over time, colored by site
+ggplot( data = mean_temps, 
+        aes( x = Date_Time, y = Temp, 
+             group = Site, color = -Lat, fill = -Lat ) ) +
+  geom_smooth( method = "loess", se = T ) +
+  scale_color_viridis_c() +
+  scale_fill_viridis_c( guide = FALSE ) +
+  labs( x = "Date", y = "Temp (°C)" , color = "Latitude (°N)" ) +
+  theme_classic()
+
+# Plot distributions of daily mean temp, grouped by site
+ggplot( data = mean_temps, 
+        aes( x = Lat, y = Temp, group = Site ) ) +
+  geom_jitter( size = 0.5, width = 0.1, color = "grey" ) +
+  geom_point( data = site_temps, size = 3 ) +
+  geom_errorbar( data = site_temps,
+                 aes( ymin = Temp - ci, ymax = Temp + ci ),
+                 width = 0, size = 1 ) +
+  labs( y = "Temp (°C)" , x = "Latitude (°N)" ) +
+  geom_line( data = site_temps, group = "identity" ) +
+  theme_classic()
+
+# Plot relationship between latitude and temp by month and year: latitudinal temp gradient only holds in winter months
+ggplot( data = mean_temps, 
+        aes( x = Lat, y = Temp, group = Site ) ) +
+  geom_jitter( size = 0.5, width = 0.1, color = "grey" ) +
+  geom_line( data = site_month_temps, group = "identity" ) +
+  geom_point( data = site_month_temps, size = 3, aes( color = Temp ) ) +
+  facet_wrap( ~Month, scale = "free" ) +
+  scale_color_viridis_c() +
+  labs( y = "Temp (°C)", x = "Latitude (°N)", color = "Temp (°C)" ) +
+  theme_classic() +
+  theme( strip.background = element_blank() )
+
+
+```
+
+
